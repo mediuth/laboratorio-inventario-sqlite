@@ -1,5 +1,8 @@
+
+
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import '../models/producto.dart';
 
 class DatabaseHelper {
 
@@ -20,6 +23,7 @@ class DatabaseHelper {
     
   }
 
+
   Future<Database> _initDatabase() async {
 
     final dbPath = await getDatabasesPath();
@@ -33,6 +37,7 @@ class DatabaseHelper {
 
   }
 
+
   Future<void> _onCreate(Database db, int version) async {
 
     await db.execute('''
@@ -44,6 +49,62 @@ class DatabaseHelper {
         cantidad INTEGER NOT NULL CHECK (cantidad >= 0)
       )
     ''');
+
+  }
+
+
+  Future<int> insertarProducto(Producto producto) async {
+
+    final db = await database;
+
+    final datos = producto.toMap();
+    datos.remove('id');
+
+    return await db.insert('productos', datos);
+
+  }
+
+
+  Future<List<Producto>> obtenerProductos() async {
+
+    final db = await database;
+
+    final List<Map<String, dynamic>> registros = await db.query(
+      'productos',
+      orderBy: 'nombre ASC',
+    );
+
+    return registros.map((map) => Producto.fromMap(map)).toList();
+    
+  }
+
+
+  Future<int> actualizarProducto(Producto producto) async {
+
+    final db = await database;
+
+    final datos = producto.toMap();
+    datos.remove('id');
+
+    return await db.update(
+      'productos',
+      datos,
+      where: 'id = ?',
+      whereArgs: [producto.id],
+    );
+
+  }
+
+
+  Future<int> eliminarProducto(int id) async {
+
+    final db = await database;
+
+    return await db.delete(
+      'productos',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
 
   }
 
