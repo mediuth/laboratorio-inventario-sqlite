@@ -88,8 +88,8 @@ class _ListaProductosScreenState extends State<ListaProductosScreen> {
           content: Text(
 
             producto == null
-                ? 'Producto agregado correctamente'
-                : 'Producto actualizado correctamente',
+                ? 'Producto guardado'
+                : 'Producto actualizado',
           ),
 
         ),
@@ -151,7 +151,7 @@ class _ListaProductosScreenState extends State<ListaProductosScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Producto eliminado correctamente'),
+          content: Text('Producto eliminado'),
         ),
       );
 
